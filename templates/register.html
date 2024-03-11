@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Register</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+    <style>
+        body {
+            background-image: url("{{ url_for('static', filename='images/homepage.jpeg') }}");
+            background-size: cover;
+            background-position: center;
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .register {
+            background-color: rgba(255, 255, 255, 0.8); /* 添加透明背景 */
+            padding: 20px;
+            max-width: 400px;
+            margin: 50px auto; /* 居中 */
+            border-radius: 10px; /* 添加圆角 */
+        }
+
+        .register h1 {
+            text-align: center;
+        }
+
+        .register form {
+            margin-top: 20px;
+        }
+
+        .register form table {
+            width: 100%;
+        }
+
+        .register form table td {
+            padding: 10px 0;
+        }
+
+        .register form table input[type="text"],
+        .register form table input[type="password"],
+        .register form table input[type="email"],
+        .register form table input[type="tel"] {
+            width: calc(100% - 40px);
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            outline: none;
+        }
+
+        .register form table input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .register form .msg {
+            margin-top: 10px;
+            color: #dc3545;
+            font-size: 14px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="register">
+    <h1>Register</h1>
+    <div class="links">
+        <a href="{{ url_for('login') }}">Login</a>
+        <a href="{{ url_for('register') }}" class="active">Register</a>
+    </div>
+    <form action="{{ url_for('register') }}" method="post" autocomplete="off">
+        <table>
+            <tr>
+                <td><label for="username"><i class="fas fa-user"></i></label></td>
+                <td><input type="text" name="username" placeholder="Username" id="username" required></td>
+            </tr>
+            <tr>
+                <td><label for="password"><i class="fas fa-lock"></i></label></td>
+                <td><input type="password" name="password" placeholder="Password" id="password" required></td>
+            </tr>
+            <tr>
+                <td><label for="email"><i class="fas fa-envelope"></i></label></td>
+                <td><input type="email" name="email" placeholder="Email" id="email" required></td>
+            </tr>
+            <tr>
+                <td><label for="firstname"><i class="fas fa-user"></i></label></td>
+                <td><input type="text" name="firstname" placeholder="First Name" id="firstname" required></td>
+            </tr>
+            <tr>
+                <td><label for="lastname"><i class="fas fa-user"></i></label></td>
+                <td><input type="text" name="lastname" placeholder="Last Name" id="lastname" required></td>
+            </tr>
+            <tr>
+                <td><label for="address"><i class="fas fa-map-marker"></i></label></td>
+                <td><input type="text" name="address" placeholder="Address" id="address" required></td>
+            </tr>
+            <tr>
+                <td><label for="phonenumber"><i class="fas fa-phone"></i></label></td>
+                <td><input type="tel" name="phonenumber" placeholder="Phone Number" id="phone" value="+64" pattern="^\+64\d{<=10}$" required></td>
+            </tr>
+        </table>
+        <div class="msg">{{ msg }}</div>
+        <input type="submit" value="Register">
+    </form>
+</div>
+</body>
+</html>

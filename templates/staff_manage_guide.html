@@ -1,0 +1,44 @@
+{% extends "staff_layout.html" %}
+
+{% block content %}
+<div class="container">
+    <style>
+        div.container {
+            margin-left: 220px !important; 
+        }
+        .guide-image {
+            width: 150px; /* Adjust the width to your desired size */
+            height: auto; /* Maintain aspect ratio */
+        }
+    </style>
+    <h1>Guide Management</h1>
+    <a href="{{ url_for('staff_dashboard.add_guide') }}" class="btn btn-primary">Add New Guide Item</a>
+    
+    <h2>Existing Guide Items</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Common Name</th>
+                <th>Scientific Name</th>
+                <th>Primary Image</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in guides %}
+            <tr>
+                <td>{{ item['CommonName'] }}</td>
+                <td>{{ item['ScientificName'] }}</td>
+                <td><img src="{{ url_for('static', filename='images/' + item['CommonName'].replace(' ', '_') + '1.jpeg') }}" alt="Primary image of {{ item['CommonName'] }}" class="guide-image"></td>
+                <td>
+                    <a href="{{ url_for('staff_dashboard.edit_guide', item_id=item['FreshwaterID']) }}" class="btn btn-info">Edit</a>
+                    <form action="{{ url_for('staff_dashboard.delete_guide', item_id=item['FreshwaterID']) }}" method="post" style="display: inline;" onsubmit="return confirm('Are you sure?');">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "admin_layout.html" %}
+
+{% block content %}
+
+<h2>Edit River User</h2>
+<form action="" method="post">
+    
+    <div><label>Username: <input type="text" name="username" value="{{ user.username }}" readonly style="background-color: #e9ecef; color: #6c757d;"></label></div>
+    <div><label>First Name: <input type="text" name="firstname" value="{{ user.first_name }}"></label></div>
+    <div><label>Last Name: <input type="text" name="lastname" value="{{ user.last_name}}"></label></div>
+    <div><label>Address: <input type="text" name="address" value="{{ user.address }}"></label></div>
+    <div><label>Email: <input type="email" name="email" value="{{ user.email }}"></label></div>
+    <div><label>Phone Number: <input type="text" name="phonenumber" value="{{ user.phone_number }}"></label></div>
+    <div><label>Date Joined: <input type="date" name="date_joined" value="{{ user.date_joined }}"></label></div>
+    <div><label>Status: <select name="status">
+        <option value="Active" {% if user.status == 'Active' %}selected{% endif %}>Active</option>
+        <option value="Inactive" {% if user.status == 'Inactive' %}selected{% endif %}>Inactive</option>
+    </select></label></div>
+    <div><button type="submit">Update User</button></div>
+</form>
+{% endblock %}
+

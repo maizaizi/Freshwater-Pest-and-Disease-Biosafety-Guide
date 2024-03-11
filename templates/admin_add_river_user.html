@@ -1,0 +1,21 @@
+{% extends "admin_layout.html" %}
+
+{% block content %}
+<h2>Add River User</h2>
+<form action="" method="post">
+    <div><label>Username: <input type="text" name="username"></label></div>
+    <div><label>First Name: <input type="text" name="firstname"></label></div>
+    <div><label>Last Name: <input type="text" name="lastname"></label></div>
+    <div><label>Address: <input type="text" name="address"></label></div>
+    <div><label>Email: <input type="email" name="email"></label></div>
+    <div><label>Password: <input type="password" name="password"></label></div>
+    <div><label>Phone Number: <input type="text" name="phonenumber"></label></div>
+    <div><label>Status: 
+        <select name="status">
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+        </select>
+    </label></div>
+    <div><button type="submit">Add User</button></div>
+</form>
+{% endblock %}

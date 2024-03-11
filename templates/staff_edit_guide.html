@@ -1,0 +1,51 @@
+{% extends "staff_layout.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Edit Guide Item</h1>
+    <form action="{{ url_for('staff_dashboard.edit_guide', item_id=item['FreshwaterID']) }}" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="ItemType">Item Type:</label>
+            <select name="ItemType" id="ItemType" class="form-control">
+                <option value="Pest" {% if item['ItemType'] == 'Pest' %}selected{% endif %}>Pest</option>
+                <option value="Disease" {% if item['ItemType'] == 'Disease' %}selected{% endif %}>Disease</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="PresentInNZ">Present in NZ:</label>
+            <select name="PresentInNZ" id="PresentInNZ" class="form-control">
+                <option value="Yes" {% if item['PresentInNZ'] == 'Yes' %}selected{% endif %}>Yes</option>
+                <option value="No" {% if item['PresentInNZ'] == 'No' %}selected{% endif %}>No</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="CommonName">Common Name:</label>
+            <input type="text" class="form-control" name="CommonName" id="CommonName" value="{{ item['CommonName'] }}" required>
+        </div>
+        <div class="form-group">
+            <label for="ScientificName">Scientific Name:</label>
+            <input type="text" class="form-control" name="ScientificName" id="ScientificName" value="{{ item['ScientificName'] }}">
+        </div>
+        <div class="form-group">
+            <label for="KeyCharacteristics">Key Characteristics:</label>
+            <textarea class="form-control" name="KeyCharacteristics" id="KeyCharacteristics">{{ item['KeyCharacteristics'] }}</textarea>
+        </div>
+        <div class="form-group">
+            <label for="BiologyDescription">Biology Description:</label>
+            <textarea class="form-control" name="BiologyDescription" id="BiologyDescription">{{ item['BiologyDescription'] }}</textarea>
+        </div>
+        <div class="form-group">
+            <label for="Impacts">Impacts:</label>
+            <textarea class="form-control" name="Impacts" id="Impacts">{{ item['Impacts'] }}</textarea>
+        </div>
+        <div class="form-group">
+            <label for="image">Guide Image (optional):</label>
+            <input type="file" class="form-control" name="image" id="image">
+            {% if item['ImageFilename'] %}
+                <img src="{{ url_for('static', filename='images/' + item['ImageFilename']) }}" alt="Guide Image" class="img-thumbnail">
+            {% endif %}
+        </div>
+        <button type="submit" class="btn btn-primary">Update Guide</button>
+    </form>
+</div>
+{% endblock %}

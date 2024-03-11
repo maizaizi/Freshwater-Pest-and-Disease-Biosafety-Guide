@@ -1,0 +1,48 @@
+{% extends "staff_layout.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Add New Guide Item</h1>
+    <form action="{{ url_for('staff_dashboard.add_guide') }}" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="ItemType">Item Type:</label>
+            <select name="ItemType" id="ItemType" class="form-control">
+                <option value="Pest">Pest</option>
+                <option value="Disease">Disease</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="PresentInNZ">Present in NZ:</label>
+            <select name="PresentInNZ" id="PresentInNZ" class="form-control">
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="CommonName">Common Name:</label>
+            <input type="text" name="CommonName" id="CommonName" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="ScientificName">Scientific Name:</label>
+            <input type="text" name="ScientificName" id="ScientificName" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="KeyCharacteristics">Key Characteristics:</label>
+            <textarea name="KeyCharacteristics" id="KeyCharacteristics" class="form-control"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="BiologyDescription">Biology Description:</label>
+            <textarea name="BiologyDescription" id="BiologyDescription" class="form-control"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="Impacts">Impacts:</label>
+            <textarea name="Impacts" id="Impacts" class="form-control"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="image">Primary Image:</label>
+            <input type="file" name="image" id="image" class="form-control-file">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+{% endblock %}

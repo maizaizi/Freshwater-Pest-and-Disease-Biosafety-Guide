@@ -1,0 +1,21 @@
+{% extends "admin_layout.html" %}
+
+{% block content %}
+<h2>Edit Staff Member</h2>
+<form action="" method="post">
+
+    <div><label>Username: <input type="text" name="username" value="{{ staff_member.username }}" readonly style="background-color: #e9ecef; color: #6c757d;"></label></div>
+    <div><label>First Name: <input type="text" name="firstname" value="{{ staff_member.first_name }}"></label></div>
+    <div><label>Last Name: <input type="text" name="lastname" value="{{ staff_member.last_name }}"></label></div>
+    <div><label>Email: <input type="email" name="email" value="{{ staff_member.email }}"></label></div>
+    <div><label>Work Phone Number: <input type="text" name="workphonenumber" value="{{ staff_member.work_phone_number }}"></label></div>
+    <div><label>Hire Date: <input type="date" name="hiredate" value="{{ staff_member.hire_date }}"></label></div>
+    <div><label>Position: <input type="text" name="position" value="{{ staff_member.position }}"></label></div>
+    <div><label>Department: <input type="text" name="department" value="{{ staff_member.department }}"></label></div>
+    <div><label>Status: <select name="status">
+        <option value="Active" {% if staff_member.status == 'Active' %}selected{% endif %}>Active</option>
+        <option value="Inactive" {% if staff_member.status == 'Inactive' %}selected{% endif %}>Inactive</option>
+    </select></label></div>
+    <div><button type="submit">Update Staff Member</button></div>
+</form>
+{% endblock %}

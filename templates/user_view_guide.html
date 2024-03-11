@@ -1,0 +1,21 @@
+{% extends "user_layout.html" %}
+
+{% block content %}
+<h2>Freshwater Pest and Disease Guide</h2>
+<div class="image-container">
+    {% for item in pests_and_diseases %}
+        <div class="item">
+            <a href="{{ url_for('user_dashboard.detailed_view', item_id=item['FreshwaterID']) }}">
+                <img src="{{ url_for('static', filename='images/' + item['CommonName'].replace(' ', '_') + '1.jpeg') }}" alt="Primary image of {{ item['CommonName'] }}">
+            </a>
+            <h3>{{ item['CommonName'] }}</h3>
+            <p>Present in NZ: {% if item['PresentInNZ'] == 'Yes' %}Yes{% else %}No{% endif %}</p>
+        </div>
+        {% if loop.index % 4 == 0 %}
+            </div><div class="image-container">
+        {% endif %}
+    {% endfor %}
+</div>
+{% endblock %}
+
+

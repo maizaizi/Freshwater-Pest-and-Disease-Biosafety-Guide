@@ -1,0 +1,48 @@
+{% extends "admin_layout.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between mb-3">
+    <h2>Manage Staff Members</h2>
+    <a href="{{ url_for('admin_dashboard.add_staff') }}" class="btn btn-success" style="width: auto;">Add New Staff Member</a>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover">
+        <thead class="thead-light">
+            <tr>
+                <th>Username</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Work Phone Number</th>
+                <th>Hire Date</th>
+                <th>Position</th>
+                <th>Department</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for staff in staff_members_info %}
+            <tr>
+                <td>{{ staff.username }}</td>
+                <td>{{ staff.first_name }}</td>
+                <td>{{ staff.last_name }}</td>
+                <td>{{ staff.email }}</td>
+                <td>{{ staff.work_phone_number }}</td>
+                <td>{{ staff.hire_date }}</td>
+                <td>{{ staff.position }}</td>
+                <td>{{ staff.department }}</td>
+                <td>{{ staff.status }}</td>
+                <td>
+                    <a href="{{ url_for('admin_dashboard.edit_staff', username=staff.username) }}" class="btn btn-primary btn-sm">Edit</a>
+                    <form action="{{ url_for('admin_dashboard.delete_staff', username=staff.username) }}" method="post" onsubmit="return confirm('Are you sure?');" style="display: inline-block;">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

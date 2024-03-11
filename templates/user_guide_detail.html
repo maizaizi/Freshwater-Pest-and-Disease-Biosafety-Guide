@@ -1,0 +1,24 @@
+{% extends "user_layout.html" %}
+
+{% block content %}
+<!-- Additional images -->
+<div class="additional-images" style="margin-bottom: 20px;">
+    
+    <div class="additional-images-grid">
+        {% for i in range(1, 5) %}
+            {% set filename = 'images/' + item['CommonName'].replace(' ', '_') + i|string + '.jpeg' %}
+            {% set alt_text = 'Additional image ' + i|string + ' of ' + item['CommonName'] %}
+            <img src="{{ url_for('static', filename=filename) }}" alt="{{ alt_text }}" style="width: 200px; margin-right: 10px; margin-bottom: 10px; object-fit: cover;">
+        {% endfor %}
+    </div>
+</div>
+
+<div class="detail-container">
+    <h2>{{ item['CommonName'] }}</h2>
+    <p><strong>Scientific Name:</strong> {{ item['ScientificName'] }}</p>
+    <p><strong>Key Characteristics:</strong> {{ item['KeyCharacteristics'] }}</p>
+    <p><strong>Description:</strong> {{ item['BiologyDescription'] }}</p>
+    <p><strong>Impacts:</strong> {{ item['Impacts'] }}</p>
+</div>
+{% endblock %}
+

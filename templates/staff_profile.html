@@ -1,0 +1,50 @@
+{% extends "staff_layout.html" %}
+
+{% block content %}
+<div class="profile-container">
+    <h2>Staff Profile</h2>
+
+    <form method="post" action="{{ url_for('staff_dashboard.update_staff_profile') }}">  
+        <div class="profile-info">
+            <label for="staff_number">Staff Number:</label>
+            <input type="text" id="staff_number'" name="staff_number'" value="{{ staff_info['staff_number'] }}"  readonly class="readonly-input">
+        </div>
+        <div class="profile-info">
+            <label for="first_name">First Name:</label>
+            <input type="text" id="first_name" name="first_name" value="{{ staff_info['first_name'] }}">
+        </div>
+        <div class="profile-info">
+            <label for="last_name">Last Name:</label>
+            <input type="text" id="last_name" name="last_name" value="{{ staff_info['last_name'] }}">
+        </div>
+        <div class="profile-info">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" value="{{ staff_info['email'] }}">
+        </div>
+        <div class="profile-info">
+            <label for="work_phone">Work Phone Number:</label>
+            <input type="text" id="work_phone" name="work_phone" value="{{ staff_info['work_phone'] }}">
+        </div>
+        <div class="profile-info">
+            <label for="hire_date">Hire Date:</label>
+            <input type="date" id="hire_date" name="hire_date" value="{{ staff_info['hire_date'] }}" readonly class="readonly-input">
+        </div>
+        <div class="profile-info">
+            <label for="position">Position:</label>
+            <input type="text" id="position" name="position" value="{{ staff_info['position'] }}" readonly class="readonly-input">
+        </div>
+        <div class="profile-info">
+            <label for="department">Department:</label>
+            <input type="text" id="department" name="department" value="{{ staff_info['department'] }}" readonly class="readonly-input">
+        </div>
+        <div class="profile-info">
+            <label for="status">Status:</label>
+            <select id="status" name="status">
+                <option value="Active" {{ 'selected' if staff_info['status'] == 'Active' else '' }}>Active</option>
+                <option value="Inactive" {{ 'selected' if staff_info['status'] == 'Inactive' else '' }}>Inactive</option>
+            </select>
+        </div>
+        <input type="submit" value="Update Profile">
+    </form>
+</div>
+{% endblock %}

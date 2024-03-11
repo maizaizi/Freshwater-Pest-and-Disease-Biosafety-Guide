@@ -1,0 +1,23 @@
+{% extends "admin_layout.html" %}
+
+{% block content %}
+<h2>Add Staff Member</h2>
+<form action="" method="post">
+    <div><label>Username: <input type="text" name="username" required></label></div>
+    <div><label>First Name: <input type="text" name="firstname" required></label></div>
+    <div><label>Last Name: <input type="text" name="lastname" required></label></div>
+    <div><label>Email: <input type="email" name="email" required></label></div>
+    <div><label>Password: <input type="password" name="password" required></label></div>
+    <div><label>Work Phone Number: <input type="text" name="workphonenumber"></label></div>
+    <div><label>Hire Date: <input type="date" name="hiredate"></label></div>
+    <div><label>Position: <input type="text" name="position"></label></div>
+    <div><label>Department: <input type="text" name="department"></label></div>
+    <div><label>Status: 
+        <select name="status">
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+        </select>
+    </label></div>
+    <div><button type="submit">Add Staff Member</button></div>
+</form>
+{% endblock %}

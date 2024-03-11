@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Dashboard{% endblock %}</title>
+    
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="loggedin">
+    <nav class="navtop">
+        <div>
+            <h1>Admin Dashboard</h1>
+            <a href="{{ url_for('admin_dashboard.admin_profile') }}"><i class="fas fa-user-circle"></i>Update Profile</a>
+            <a href="{{ url_for('admin_dashboard.admin_change_password') }}"><i class="fas fa-key"></i>Change Password</a>
+            <a href="{{ url_for('admin_dashboard.manage_user') }}"><i class="fas fa-users"></i>Manage River Users</a>
+            <a href="{{ url_for('admin_dashboard.manage_staff') }}"><i class="fas fa-users"></i>Manage Staff</a>
+            <a href="#"><i class="fas fa-book"></i>Manage Guide</a>
+            <a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i>Logout</a>
+        </div>
+    </nav>
+    
+    <div class="flash-messages">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+    <div class="content">
+        {% block content %}
+        
+        {% endblock %}
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

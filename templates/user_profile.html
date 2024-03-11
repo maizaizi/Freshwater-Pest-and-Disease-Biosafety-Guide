@@ -1,0 +1,42 @@
+{% extends 'user_layout.html' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Profile Page</h2>
+    <p>Your account details are below:</p>
+    <div class="table-responsive">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th scope="row">Username:</th>
+                    <td>{{ account[0] }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">First Name:</th>
+                    <td>{{ account[1] }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Last Name:</th>
+                    <td>{{ account[2] }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Email:</th>
+                    <td>{{ account[3] }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Address:</th>
+                    <td>{{ account[4] }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Phone Number:</th>
+                    <td>{{ account[5] }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <a href="{{ url_for('user_dashboard.edit_profile') }}" class="btn btn-primary mr-2">Edit Profile</a>
+    <a href="{{ url_for('user_dashboard.change_password') }}" class="btn btn-secondary">Change Password</a>
+</div>
+{% endblock %}
