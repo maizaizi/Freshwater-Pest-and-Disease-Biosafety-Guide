@@ -62,6 +62,7 @@ CREATE TABLE IF NOT EXISTS Staff (
 
 
 
+
 INSERT INTO Staff (username, FirstName, LastName, Email, WorkPhoneNumber, HireDate, Position, Department, Status, secureaccount_id) 
 VALUES
 ('alice.green','Alice', 'Green', 'alice.green@example.com', '555-6789', '2023-01-10', 'Pest and Disease Specialist', 'Pest Control', 'Active', '2'),
@@ -123,3 +124,16 @@ VALUES
     ('Pest', 'No', 'Rusty Crayfish', 'Orconectes rusticus', 'Larger and more aggressive than native crayfish species, with a distinctive rusty spot on each side of the shell.', 'Reproduces and spreads quickly, can tolerate various environments.', 'Displaces native crayfish, reduces aquatic plant diversity, alters the food web.'),
     ('Disease', 'No', 'Viral Hemorrhagic Septicemia', 'VHS', 'Affects fish species causing bleeding, swelling, and acute mortality.', 'Highly contagious virus affecting freshwater and marine fish.', 'Causes significant die-offs in affected fish populations, impacts commercial fishing and aquaculture.'),
     ('Disease', 'No', 'Chytrid Fungus', 'Batrachochytrium dendrobatidis', 'Infects amphibian skin, leading to disease known as chytridiomycosis.', 'The fungus grows in the skin of amphibians, disrupting their ability to absorb water and electrolytes.', 'Leads to declines and extinctions in amphibian populations worldwide.');
+
+CREATE TABLE UploadedImages (
+    ImageID INT AUTO_INCREMENT PRIMARY KEY,
+    ImageFilename VARCHAR(255) NOT NULL
+);
+ALTER TABLE FRESHWATER_PEST_AND_DISEASE_BIOSECURITY_GUIDE ADD COLUMN ImageFilename VARCHAR(255);
+
+CREATE TABLE GuideAdditionalImages (
+    ImageID INT AUTO_INCREMENT PRIMARY KEY,
+    GuideID INT,
+    AdditionalFilename VARCHAR(255) NOT NULL,
+    FOREIGN KEY (GuideID) REFERENCES FRESHWATER_PEST_AND_DISEASE_BIOSECURITY_GUIDE(FreshwaterID)
+);

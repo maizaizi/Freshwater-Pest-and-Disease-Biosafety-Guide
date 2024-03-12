@@ -4,6 +4,10 @@ from flask import Blueprint
 from flask import session
 from flask_hashing import Hashing
 from datetime import datetime
+from flask import current_app
+import os
+import uuid
+from werkzeug.utils import secure_filename
 app = Flask(__name__)
 hashing = Hashing(app)
 
@@ -408,3 +412,171 @@ def delete_staff(username):
         flash('Staff member not found!')
 
     return redirect(url_for('admin_dashboard.manage_staff'))
+
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in current_app.config['ALLOWED_EXTENSIONS']
+
+
+@admin_bp.route('/manage_guide', methods=['GET', 'POST'])
+def manage_guide():
+    if 'loggedin' not in session or session['role'] != 'Administrator':
+        return redirect(url_for('login'))
+    
+    cursor = getCursor()
+    cursor.execute('SELECT * FROM FRESHWATER_PEST_AND_DISEASE_BIOSECURITY_GUIDE ORDER BY FreshwaterID DESC')
+    rows = cursor.fetchall()
+    guides = [dict(zip(cursor.column_names, row)) for row in rows]  
+    return render_template('admin_manage_guide.html', guides=guides)
+
+
+
+@admin_bp.route('/add_guide', methods=['GET', 'POST'])
+def add_guide():
+    if 'loggedin' not in session or session['role'] != 'Administrator':
+        return redirect(url_for('login'))
+    
+    if request.method == 'POST':
+        item_type = request.form['ItemType']
+        present_in_nz = request.form['PresentInNZ']
+        common_name = request.form['CommonName']
+        scientific_name = request.form.get('ScientificName', '')
+        key_characteristics = request.form.get('KeyCharacteristics', '')
+        biology_description = request.form.get('BiologyDescription', '')
+        impacts = request.form.get('Impacts', '')
+
+        image_filename = None
+        if 'image' in request.files:
+            image = request.files['image']
+            if image.filename != '' and allowed_file(image.filename):
+                image_filename = secure_filename(str(uuid.uuid4()) + os.path.splitext(image.filename)[1])
+                image_path = os.path.join(current_app.config['UPLOAD_FOLDER'], image_filename)
+                image.save(image_path)
+
+                cursor = getCursor()
+                # Store the primary image file name in the UploadedImages table
+                cursor.execute("INSERT INTO UploadedImages (ImageFilename) VALUES (%s)", (image_filename,))
+                
+        # Insert the guide details into the FRESHWATER_PEST_AND_DISEASE_BIOSECURITY_GUIDE table
+        insert_sql = """
+        INSERT INTO FRESHWATER_PEST_AND_DISEASE_BIOSECURITY_GUIDE 
+        (ItemType, PresentInNZ, CommonName, ScientificName, KeyCharacteristics, BiologyDescription, Impacts, ImageFilename) 
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+        """
+        cursor.execute(insert_sql, (item_type, present_in_nz, common_name, scientific_name, key_characteristics, biology_description, impacts, image_filename))
+        new_guide_id = cursor.lastrowid
+
+        # Handle additional images
+        additional_images = request.files.getlist('additional_images')
+        for additional_image in additional_images:
+            if additional_image.filename != '' and allowed_file(additional_image.filename):
+                additional_image_filename = secure_filename(str(uuid.uuid4()) + os.path.splitext(additional_image.filename)[1])
+                additional_image_path = os.path.join(current_app.config['UPLOAD_FOLDER'], additional_image_filename)
+                additional_image.save(additional_image_path)
+
+                # Store the additional image file name in the UploadedImages table
+                cursor.execute("INSERT INTO UploadedImages (ImageFilename) VALUES (%s)", (additional_image_filename,))
+                # Store the additional image relation to guide in the GuideAdditionalImages table
+                cursor.execute("INSERT INTO GuideAdditionalImages (GuideID, AdditionalFilename) VALUES (%s, %s)", (new_guide_id, additional_image_filename,))
+        
+        cursor.close()
+        flash('Guide item added successfully!')
+        return redirect(url_for('admin_dashboard.manage_guide'))
+
+    return render_template('admin_add_guide.html')
+
+
+@admin_bp.route('/edit_guide/<int:item_id>', methods=['GET', 'POST'])
+def edit_guide(item_id):
+    if 'loggedin' not in session or session['role'] != 'Administrator':
+        return redirect(url_for('login'))
+    
+    cursor = getCursor()
+    if request.method == 'POST':
+        item_type = request.form['ItemType']
+        present_in_nz = request.form['PresentInNZ']
+        common_name = request.form['CommonName']
+        scientific_name = request.form.get('ScientificName', '')
+        key_characteristics = request.form.get('KeyCharacteristics', '')
+        biology_description = request.form.get('BiologyDescription', '')
+        impacts = request.form.get('Impacts', '')
+        filename = None
+
+        if 'image' in request.files:
+            image = request.files['image']
+            if image.filename != '' and allowed_file(image.filename):
+                filename = secure_filename(str(uuid.uuid4()) + os.path.splitext(image.filename)[1])
+                image_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+                image.save(image_path)
+                # Store the new primary image file name in the UploadedImages table
+                cursor.execute("INSERT INTO UploadedImages (ImageFilename) VALUES (%s)", (filename,))
+        else:
+            cursor.execute("SELECT ImageFilename FROM FRESHWATER_PEST_AND_DISEASE_BIOSECURITY_GUIDE WHERE FreshwaterID = %s", (item_id,))
+            filename_data = cursor.fetchone()
+            if filename_data:
+                filename = filename_data['ImageFilename']
+
+        # Update the guide details in the FRESHWATER_PEST_AND_DISEASE_BIOSECURITY_GUIDE table
+        update_sql = """
+        UPDATE FRESHWATER_PEST_AND_DISEASE_BIOSECURITY_GUIDE 
+        SET ItemType = %s, PresentInNZ = %s, CommonName = %s, ScientificName = %s, KeyCharacteristics = %s, BiologyDescription = %s, Impacts = %s, ImageFilename = %s 
+        WHERE FreshwaterID = %s
+        """
+        cursor.execute(update_sql, (item_type, present_in_nz, common_name, scientific_name, key_characteristics, biology_description, impacts, filename, item_id))
+
+        # Handle additional images
+        additional_images = request.files.getlist('additional_images')
+        if additional_images:
+            # First, you might want to clear existing additional images if needed
+            # cursor.execute("DELETE FROM GuideAdditionalImages WHERE GuideID = %s", (item_id,))
+            for additional_image in additional_images:
+                if additional_image.filename != '' and allowed_file(additional_image.filename):
+                    additional_image_filename = secure_filename(str(uuid.uuid4()) + os.path.splitext(additional_image.filename)[1])
+                    additional_image_path = os.path.join(current_app.config['UPLOAD_FOLDER'], additional_image_filename)
+                    additional_image.save(additional_image_path)
+                    # Store the new additional image file names in the UploadedImages table and link them with the guide
+                    cursor.execute("INSERT INTO UploadedImages (ImageFilename) VALUES (%s)", (additional_image_filename,))
+                    cursor.execute("INSERT INTO GuideAdditionalImages (GuideID, AdditionalFilename) VALUES (%s, %s)", (item_id, additional_image_filename))
+
+        cursor.close()
+        flash('Guide item updated successfully!')
+        return redirect(url_for('admin_dashboard.manage_guide'))
+    else:
+        cursor.execute("SELECT * FROM FRESHWATER_PEST_AND_DISEASE_BIOSECURITY_GUIDE WHERE FreshwaterID = %s", (item_id,))
+        row = cursor.fetchone()
+        if row:
+            item = dict(zip([column[0] for column in cursor.description], row))
+            # Load additional images for the guide
+            cursor.execute("SELECT AdditionalFilename FROM GuideAdditionalImages WHERE GuideID = %s", (item_id,))
+            item['additional_images'] = [row[2] for row in cursor.fetchall() if len(row) > 2]
+        else:
+            flash('Guide item not found!')
+            return redirect(url_for('admin_dashboard.manage_guide'))
+
+        return render_template('admin_edit_guide.html', item=item)
+
+
+@admin_bp.route('/delete_guide/<int:item_id>', methods=['POST'])
+def delete_guide(item_id):
+    if 'loggedin' not in session or session['role'] != 'Administrator':
+        return redirect(url_for('login'))
+    
+    cursor = getCursor()
+    try:
+
+        delete_additional_images_sql = "DELETE FROM GuideAdditionalImages WHERE GuideID = %s"
+        cursor.execute(delete_additional_images_sql, (item_id,))
+        delete_guide_sql = "DELETE FROM FRESHWATER_PEST_AND_DISEASE_BIOSECURITY_GUIDE WHERE FreshwaterID = %s"
+        cursor.execute(delete_guide_sql, (item_id,))
+
+        flash('Guide item and associated additional images deleted successfully!')
+    except Exception as e:
+       
+        cursor.connection.rollback()
+        print("Error occurred: ", e)
+        flash('Error deleting guide item.')
+    finally:
+
+        cursor.close()
+
+    return redirect(url_for('admin_dashboard.manage_guide'))

@@ -131,7 +131,7 @@ def change_password():
             ''', (hashed_password, username))
 
             flash('Your password has been updated successfully.')
-            return redirect(url_for('user_dashboard.userprofile'))  # 修正重定向目标
+            return redirect(url_for('user_dashboard.userprofile')) 
         else:
             flash('Incorrect current password.')
             return redirect(url_for('change_password'))
@@ -147,16 +147,12 @@ def guide():
     pests_and_diseases = [dict(zip(columns, row)) for row in result] 
     return render_template('user_view_guide.html', pests_and_diseases=pests_and_diseases)
 
-@user_bp.route('/guide/detail/<int:item_id>')
+@user_bp.route('/detailed_view/<int:item_id>')
 def detailed_view(item_id):
     cursor = getCursor()
-    cursor.execute("""
-        SELECT * FROM FRESHWATER_PEST_AND_DISEASE_BIOSECURITY_GUIDE 
-        WHERE FreshwaterID = %s
-    """, (item_id,))
-    item_details = cursor.fetchone()
-  
-    item = dict(zip([column[0] for column in cursor.description], item_details))
-    return render_template('user_guide_detail.html', item=item)
-
-
+    cursor.execute("SELECT * FROM FRESHWATER_PEST_AND_DISEASE_BIOSECURITY_GUIDE WHERE FreshwaterID = %s", (item_id,))
+    item = cursor.fetchone()
+    cursor.execute("SELECT AdditionalFilename FROM GuideAdditionalImages WHERE GuideID = %s", (item_id,))
+    additional_images = [row[0] for row in cursor.fetchall()] 
+    cursor.close()
+    return render_template('user_guide_detail.html', item=item, additional_images=additional_images)

@@ -1,4 +1,4 @@
-{% extends "staff_layout.html" %}
+{% extends "admin_layout.html" %}
 
 {% block content %}
 <div class="container">
@@ -7,12 +7,12 @@
             margin-left: 220px !important; 
         }
         .guide-image {
-            width: 150px; /* Adjust the width to your desired size */
-            height: auto; /* Maintain aspect ratio */
+            width: 150px; 
+            height: auto; 
         }
     </style>
     <h1>Guide Management</h1>
-    <a href="{{ url_for('staff_dashboard.add_guide') }}" class="btn btn-primary">Add New Guide Item</a>
+    <a href="{{ url_for('admin_dashboard.add_guide') }}" class="btn btn-primary">Add New Guide Item</a>
     
     <h2>Existing Guide Items</h2>
     <table class="table">
@@ -37,8 +37,8 @@
                     {% endif %}
                 </td>
                 <td>
-                    <a href="{{ url_for('staff_dashboard.edit_guide', item_id=item['FreshwaterID']) }}" class="btn btn-info">Edit</a>
-                    <form action="{{ url_for('staff_dashboard.delete_guide', item_id=item['FreshwaterID']) }}" method="post" style="display: inline;" onsubmit="return confirm('Are you sure?');">
+                    <a href="{{ url_for('admin_dashboard.edit_guide', item_id=item['FreshwaterID']) }}" class="btn btn-info">Edit</a>
+                    <form action="{{ url_for('admin_dashboard.delete_guide', item_id=item['FreshwaterID']) }}" method="post" style="display: inline;" onsubmit="return confirm('Are you sure?');">
                         <button type="submit" class="btn btn-danger">Delete</button>
                     </form>
                 </td>
