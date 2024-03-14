@@ -23,23 +23,23 @@ Data Flow: Displays information relevant to administrative tasks, with options f
 - 3. Staff Dashboard (/staff/dashboard):**
 Functionality: Allows staff members to view user profiles and manage guide entries, providing them with the necessary tools to contribute to the application’s content.
 Data Flow: Staff members access information pertinent to their roles, with restricted capabilities compared to administrators.
-**4. Authentication (/login/, /register, /logout):**
+- 4. Authentication (/login/, /register, /logout):**
 Routes: /login/, /register, /logout
 Functionality: Handles user registration, login, and logout processes.
 Data Flow: Involves checking credentials, registering new users with hashed passwords, and managing session data for authentication.
-**5. Profile Management (/profile, /profile/update, /change_password):**
+- 5. Profile Management (/profile, /profile/update, /change_password):**
 Routes: /profile, /profile/update, /change_password
 Functionality: Enables users to view and edit their profile information and change their passwords.
 Data Flow: Information is fetched from and updated in the database, with password changes incorporating hashing for security.
-**6. Guide Item Management (/admin/manage_guide, /admin/add_guide, /admin/edit_guide/<int:item_id>, /admin/delete_guide/<int:item_id>):**
+- 6. Guide Item Management (/admin/manage_guide, /admin/add_guide, /admin/edit_guide/<int:item_id>, /admin/delete_guide/<int:item_id>):**
 Routes: Specific to guide management, including adding, updating, and deleting guide items.
 Functionality: Allows administrators to maintain the content of the guide, ensuring it is comprehensive and up-to-date.
 Data Flow: Guide items are created, modified, or removed from the database, reflecting changes in the user interface.
-7. Guide Viewing (/listfreshwater, /view_item_details/<int:item_id>):**
+- 7. Guide Viewing (/listfreshwater, /view_item_details/<int:item_id>):**
 Routes: For public and user-specific viewing of guide entries.
 Functionality: Users can browse a list of freshwater guide entries and view detailed information on each.
 Data Flow: Retrieves guide information from the database for display purposes.
-**8. User and Staff Management (/admin/manage_user, /admin/manage_staff, /admin/add_river_user, /admin/add_staff, /admin/edit_river_user/<username>, /admin/edit_staff/<username>, /admin/delete_river_user/<username>, /admin/delete_staff/<username>):**
+- 8. User and Staff Management (/admin/manage_user, /admin/manage_staff, /admin/add_river_user, /admin/add_staff, /admin/edit_river_user/<username>, /admin/edit_staff/<username>, /admin/delete_river_user/<username>, /admin/delete_staff/<username>):**
 Routes: Dedicated to the management of user and staff accounts.
 Functionality: Includes creating, updating, and deleting accounts, with additional capabilities for admins such as viewing all user and staff profiles.
 Data Flow: Manipulates user and staff data within the database, with updates reflecting immediately in the application.
