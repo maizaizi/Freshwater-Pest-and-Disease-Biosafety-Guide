@@ -13,7 +13,7 @@ admin_dashboard.py: Admin-specific functionalities such as user and staff manage
 staff_dashboard.py: Staff-specific functionalities including guide management and user viewing.
 user_dashboard.py: User-specific functionalities like profile management and guide viewing.
 ### Key Routes and Functionalities:
-**General User Dashboard (/user/dashboard):
+###General User Dashboard (/user/dashboard):
 Route: /user/dashboard
 Functionality: Displays the dashboard with user-specific details and a list of guides related to freshwater ecosystems.
 Data Flow: User details and guide entries are retrieved from the database; if the user is not logged in, they are redirected to the login page.
