@@ -43,3 +43,26 @@ Data Flow: Retrieves guide information from the database for display purposes.
 Routes: Dedicated to the management of user and staff accounts.
 Functionality: Includes creating, updating, and deleting accounts, with additional capabilities for admins such as viewing all user and staff profiles.
 Data Flow: Manipulates user and staff data within the database, with updates reflecting immediately in the application.
+### Assumptions
+- Session Management by Users: It is assumed that users will responsibly manage their sessions by logging out when necessary. This ensures security and integrity of user-specific data.
+- Target User Group: The application is primarily targeted towards individuals who have an understanding of biosecurity concerns related to freshwater ecosystems. This includes environmental scientists, researchers, biosecurity personnel, and educated enthusiasts.
+
+MySQL Schema Effectiveness: It is assumed that the provided MySQL database schema is well-designed and structured to efficiently meet the data storage and retrieval needs of the application. This includes proper normalization, indexing, and relationship definition among various data entities.
+
+
+### Design Decisions
+- Flask's Built-in Session Management: The decision to use Flask's built-in session management was made for its ease of use and seamless integration within the Flask ecosystem. This enables secure and straightforward management of user sessions, facilitating features such as login, logout, and session persistence.
+- Password Hashing with Flask-Hashing: For enhanced security, Flask-Hashing is employed to hash user passwords. This ensures that passwords are not stored in plain text in the database, thereby protecting user information from potential security breaches.
+
+Role-Based Access Control (RBAC): The application implements role-based access control to manage different levels of user permissions and access rights. This allows for a clear separation of functionalities among different user roles, such as administrators, staff, and general users, ensuring that users can only access information and functionalities appropriate to their roles.
+
+Template Inheritance: The use of template inheritance in the application's design promotes consistency and maintainability. By employing a base template, repetitive structures such as headers, footers, and navigation bars are defined in one place and inherited by other templates, making the UI consistent across different parts of the application and easier to maintain.
+
+RESTful Principles for Routes and Methods: The application's routes and methods are designed following RESTful principles, providing clarity and standardization to the requests and responses between the client and server. This approach simplifies the API structure, making it intuitive and easy to understand, which is beneficial for development, documentation, and future scalability.
+
+These assumptions and design decisions form the foundational principles guiding the development and operation of your Flask web application, ensuring it serves its intended purpose effectively while providing a secure, user-friendly, and maintainable platform.
+
+
+
+
+
