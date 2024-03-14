@@ -1,4 +1,4 @@
-#  COMP639-Flask Freshwater Guide Application
+#  COMP639 Freshwater Guide Application
 
 ## Project Overview
 This Flask web application is designed to support the management and viewing of river ecosystem information, with particular emphasis on users, staff, and administrators. It includes features for user authentication, role-based access control, profile management, and CRUD operations for managing river ecosystem data.
