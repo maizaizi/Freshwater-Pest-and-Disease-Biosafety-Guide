@@ -12,7 +12,7 @@
 <body class="loggedin">
     <nav class="navtop">
         <div>
-            <h1>Admin Dashboard</h1>
+            <a href="{{ url_for('admin_dashboard.dashboard') }}"><i class="fas fa-home"></i> Admin Home</a>
             <a href="{{ url_for('admin_dashboard.admin_profile') }}"><i class="fas fa-user-circle"></i>Update Profile</a>
             <a href="{{ url_for('admin_dashboard.admin_change_password') }}"><i class="fas fa-key"></i>Change Password</a>
             <a href="{{ url_for('admin_dashboard.manage_user') }}"><i class="fas fa-users"></i>Manage River Users</a>

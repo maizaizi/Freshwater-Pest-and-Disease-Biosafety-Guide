@@ -47,8 +47,11 @@
         </div>
         <div class="form-group">
             <label for="additional_images">Additional Images:</label>
-            <input type="file" name="additional_images" id="additional_images" class="form-control-file" multiple>
-        </div>
+            <div class="uploaded-images">
+                {% for additional_image in item.additional_images %}
+                    <img src="{{ url_for('static', filename='images/' + additional_image) }}" alt="Additional Image" class="img-thumbnail">
+                {% endfor %}
+            </div>
         <button type="submit" class="btn btn-primary">Update Guide</button>
     </form>
 </div>

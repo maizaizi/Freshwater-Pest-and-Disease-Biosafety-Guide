@@ -4,8 +4,6 @@ from flask import request
 from flask import redirect
 from flask import url_for
 from flask import session
-from flask import flash
-from flask import Flask, request
 import re
 from datetime import datetime
 from flask_hashing import Hashing
@@ -27,8 +25,9 @@ app.register_blueprint(admin_bp, url_prefix='/admin')
 app.register_blueprint(staff_bp, url_prefix='/staff')
 
 
-
+# Function to create an admin account
 def admin_account():
+    # Setting default values for the admin account
     username = "admin"
     raw_password = "12345"  
     email = "admin@example.com"
@@ -37,41 +36,46 @@ def admin_account():
     phonenumber = "1234567890"
     role = 'Administrator'
 
+    # Generating a hashed password using a predefined salt
     salt ='S1#e2!r3@t4$'
     hashed_password = hashing.hash_value(raw_password, salt=salt)
     print(hashed_password)
 
+    # Establishing database connection and inserting the admin account details into the database
     cursor = getCursor()
     cursor.execute('INSERT INTO secureaccount (username, password, email, firstname, lastname, phonenumber, role) VALUES (%s, %s, %s, %s, %s, %s, %s)',
                    (username, hashed_password, email, firstname, lastname, phonenumber, role))
-    
-
     cursor.close()
 
+# Route definition for the admin dashboard page
 @app.route('/admin/dashboard')
 def admin_dashboard():
-
+    # Check if the user is logged in and has an administrator role
     if 'loggedin' in session and session['role'] == 'Administrator':
-        
+        # Retrieve all administrator accounts from the database
         cursor = getCursor()
         cursor.execute('SELECT * FROM secureaccount WHERE role = %s', ('Administrator',))
         admin_members = cursor.fetchall()
+        # Render the admin dashboard template with the retrieved data
         return render_template('admin_layout.html', staff_members=admin_members)
     else:
+        # Redirect the user to the login page if they are not logged in or not an administrator
         return redirect(url_for('login'))
 
-
-
+# Function to create a staff account
 def create_staff_account(username, raw_password, email, firstname, lastname, phonenumber, role):
+    # Generate a hashed password for the new account
     salt = 'S1#e2!r3@t4$' 
     hashed_password = hashing.hash_value(raw_password, salt=salt)  
     
+    # Insert the new staff account details into the database
     cursor = getCursor()  
     cursor.execute(
         'INSERT INTO secureaccount (username, password, email, firstname, lastname, phonenumber, role) VALUES (%s, %s, %s, %s, %s, %s, %s)',
         (username, hashed_password, email, firstname, lastname, phonenumber, role)
     )
     
+# Functions to create specific staff accounts
 def create_alice_account():
     create_staff_account(
         'alice.green',
@@ -105,32 +109,37 @@ def create_charlie_account():
         'Staff'
     )
 
+# Route definition for the staff dashboard page
 @app.route('/staff/dashboard')
 def staff_dashboard():
-  
+    # Check if the user is logged in and has a staff role
     if 'loggedin' in session and session['role'] == 'Staff':
-        
+        # Retrieve all staff accounts from the database
         cursor = getCursor()
         cursor.execute('SELECT * FROM secureaccount WHERE role = %s', ('Staff',))
         admin_members = cursor.fetchall()
+        # Render the staff dashboard template with the retrieved data
         return render_template('staff_layout.html', staff_members=admin_members)
     else:
+        # Redirect the user to the login page if they are not logged in or not a staff member
         return redirect(url_for('login'))
 
-
-# http://127.0.0.1:5000/login/ - this will be the login page, we need to use both GET and POST requests
+# Route definition for the login page, supporting both GET and POST requests
 @app.route('/', methods=['GET', 'POST'])
 def login():
-    msg = ''  # Output message if something goes wrong
+    msg = ''  # Message to display on the login page
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
         username = request.form['username']
         user_password = request.form['password']
+        # Retrieve the account details from the database
         cursor = getCursor()
         cursor.execute('SELECT * FROM secureaccount WHERE username = %s', (username,))
         account = cursor.fetchone()
         if account:
-            user_id, username, password, email, role = account[0],account[1], account[2], account[3], account[8]  
+            # Check if the entered password matches the one stored in the database
+            user_id, username, password, email, role = account[0], account[1], account[2], account[3], account[8]  
             if hashing.check_value(password, user_password, salt='S1#e2!r3@t4$'):
+                # Set session variables and redirect the user to the appropriate dashboard
                 session['loggedin'] = True
                 session['id'] = user_id
                 session['username'] = username
@@ -141,7 +150,7 @@ def login():
 
                 if role == 'Administrator':
                     return redirect(url_for('admin_dashboard'))
-                if role == 'Staff':
+                elif role == 'Staff':
                     return redirect(url_for('staff_dashboard'))
                 else:
                     return redirect(url_for('user_dashboard.home'))
@@ -149,14 +158,15 @@ def login():
                 msg = 'Incorrect password!'
         else:
             msg = 'Incorrect username!'
+    # Render the login page with any message (if applicable)
     return render_template('index.html', msg=msg)
 
-
-# http://127.0.0.1:5000/register - this will be the registration page, we need to use both GET and POST requests
+# Route definition for the registration page, supporting both GET and POST requests
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    msg = ''
+    msg = ''  # Message to display on the registration page
     if request.method == 'POST' and all(key in request.form for key in ['username', 'password', 'email', 'firstname', 'lastname', 'phonenumber']):
+        # Retrieve the form data
         username = request.form['username']
         password = request.form['password']  
         email = request.form['email']
@@ -166,6 +176,7 @@ def register():
         date_joined = datetime.today().strftime('%Y-%m-%d')  
         status = 'Active'  
 
+        # Validate the submitted data and create the new account
         cursor = getCursor()
         cursor.execute('SELECT * FROM secureaccount WHERE username = %s', (username,))
         account = cursor.fetchone()
@@ -181,6 +192,7 @@ def register():
         elif len(password) < 8 or not re.search("[a-zA-Z]", password) or not re.search("[0-9]", password):
             msg = 'Password must be at least 8 characters long and include a mix of letters and numbers!'
         else:
+            # Insert the new user into the database
             hashed_password = hashing.hash_value(password, salt='S1#e2!r3@t4$')  
             cursor.execute('INSERT INTO secureaccount (username, password, email, firstname, lastname, phonenumber, role) VALUES (%s, %s, %s, %s, %s, %s, %s)', 
                            (username, hashed_password, email, firstname, lastname, phonenumber, 'River User'))
@@ -188,18 +200,18 @@ def register():
             cursor.execute('INSERT INTO RiverUsers (Username, FirstName, LastName, Address, Email, PhoneNumber, DateJoined, Status, secureaccount_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)', 
                            (username, firstname, lastname, '', email, phonenumber, date_joined, status, secureaccount_id))
             msg = 'You have successfully registered!'
+    # Render the registration page with any message (if applicable)
     return render_template('register.html', msg=msg)
 
-# http://127.0.0.1:5000/logout - this will be the logout page
+# Route definition for the logout page
 @app.route('/logout')
 def logout():
-    # Remove session data, this will log the user out
-   session.pop('loggedin', None)
-   session.pop('id', None)
-   session.pop('username', None)
-   return redirect(url_for('login'))
+    # Remove session data to log the user out
+    session.pop('loggedin', None)
+    session.pop('id', None)
+    session.pop('username', None)
+    return redirect(url_for('login'))
 
-
-
+# Main function to run the Flask app
 if __name__ == '__main__':
     app.run()
